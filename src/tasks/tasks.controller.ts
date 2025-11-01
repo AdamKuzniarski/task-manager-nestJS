@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  InternalServerErrorException,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -13,6 +13,7 @@ import { TasksService } from './tasks.service';
 import type { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { UpdateTaskStatusDto } from './dto/update-tasks-status.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -28,12 +29,12 @@ export class TasksController {
   }
 
   @Get('/:id')
-  getTaskById(@Param('id') id: string): Task | undefined {
-    if (!task) {
-      throw new InternalServerErrorException();
-    } else {
-      return this.tasksService.getTaskById(id);
+  getTaskById(@Param('id') id: string): Task {
+    const found = this.tasksService.getTaskById(id);
+    if (!found) {
+      throw new NotFoundException();
     }
+    return found;
   }
 
   @Post()
@@ -50,8 +51,9 @@ export class TasksController {
   @Patch('/:id/status')
   updateTaskStatus(
     @Param('id') id: string,
-    @Body('status') status: TaskStatus,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDto,
   ): Task | undefined {
+    const { status } = updateTaskStatusDto;
     return this.tasksService.updateTaskStatus(id, status);
   }
 

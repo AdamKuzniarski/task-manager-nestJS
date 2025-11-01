@@ -25,11 +25,20 @@ export default tseslint.config(
     },
   },
   {
+    // globale Regeln für alles
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'off',
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    },
+  },
+  {
+    // override nur für DTO files
+    files: ['**/*.dto.ts'],
+    rules: {
+      // hier killen wir den falschen Alarm von @IsNotEmpty(), @IsEnum(), usw.
+      '@typescript-eslint/no-unsafe-call': 'off',
     },
   },
 );
