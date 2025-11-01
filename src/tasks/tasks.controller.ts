@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -28,7 +29,11 @@ export class TasksController {
 
   @Get('/:id')
   getTaskById(@Param('id') id: string): Task | undefined {
-    return this.tasksService.getTaskById(id);
+    if (!task) {
+      throw new InternalServerErrorException();
+    } else {
+      return this.tasksService.getTaskById(id);
+    }
   }
 
   @Post()
