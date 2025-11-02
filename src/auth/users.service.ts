@@ -20,7 +20,7 @@ export class UsersService {
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<User> {
     const { username, password } = authCredentialsDto;
 
-    const saltRounds: number = 10;
+    const saltRounds: number = 10; //hash with bCrypt and salt
     const hashedPassword: string = await bcrypt.hash(password, saltRounds);
 
     const user = this.usersRepository.create({
@@ -36,7 +36,7 @@ export class UsersService {
         err &&
         typeof err === 'object' &&
         'code' in err &&
-        err.code === '23505'
+        err.code === '23505' // error message postgres duplicates
       ) {
         throw new ConflictException('Username already exists');
       }
